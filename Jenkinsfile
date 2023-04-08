@@ -37,5 +37,10 @@ pipeline {
 }
 
 def notify(status) {
-    sh "${status}"
+    def jobName = env.JOB_NAME + ' ' + env.GIT_BRANCH
+    def buildNo = env.BUILD_NUMBER
+    def gitCmd = "git log -1 --pretty=format:'Last Commit Number: %h\nAuthor: %an\nTime: %ar\nLast Commit Info: %s'"
+    def description = sh(returnStdout: true, script: gitCmd).trim()
+
+    echo "${jobName} Build #${buildNo} ${status}\n${description}"
 }
